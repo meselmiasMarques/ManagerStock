@@ -1,11 +1,11 @@
 namespace ManagerStock.Models;
 
-public class Products
+public class Product
 {
-    protected Products() { }
+    public Product() { }
     
     
-    public Products(
+    public Product(
         string? name, 
         string? description, 
         decimal price, 

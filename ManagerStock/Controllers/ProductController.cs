@@ -22,7 +22,7 @@ public class ProductController(ProductService productService) : ControllerBase
         try
         {
             var result = await productService.CreateAsync(model);
-            return Created($"v1/products/{result.Id}", new ResultViewModel<Products>(result));
+            return Created($"v1/products/{result.Id}", new ResultViewModel<Product>(result));
         }
         catch
         {
@@ -40,7 +40,7 @@ public class ProductController(ProductService productService) : ControllerBase
         {
             var products = await productService.GetAllAsync(minPrice, maxPrice, search);
             
-            return Ok(new ResultViewModel<List<Products>>( products));
+            return Ok(new ResultViewModel<List<Product>>( products));
             
         }
         catch (Exception e)

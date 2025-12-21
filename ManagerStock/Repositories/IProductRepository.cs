@@ -4,9 +4,9 @@ namespace ManagerStock.Repositories;
 
 public interface IProductRepository
 {
-    Task<List<Products>> GetAllProductsAsync();
-    Task<Products> GetProductByIdAsync(int id);
-    Task AddProductAsync(Products products);
-    Task UpdateProductAsync(Products products);
-    Task DeleteProductAsync(Products products);
+    Task<List<Product>> GetAllProductsAsync();
+    Task<Product> GetProductByIdAsync(int id);
+    Task AddProductAsync(Product product);
+    Task UpdateProductAsync(Product product);
+    Task DeleteProductAsync(Product product);
 }

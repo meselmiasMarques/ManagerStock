@@ -11,28 +11,37 @@ public class ProductRepository : IProductRepository
     public ProductRepository(AppDbContext context)
         => _context = context;
 
-    public async Task<List<Products>> GetAllProductsAsync()
+    public async Task<List<Product>> GetAllProductsAsync()
         => await _context.Products.ToListAsync();
 
-    public async Task<Products> GetProductByIdAsync(int id)
+    public async Task<Product> GetProductByIdAsync(int id)
         =>  await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task AddProductAsync(Products products)
+    public async Task AddProductAsync(Product product)
     {
-        await _context.Products.AddAsync(products);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+       
     }
 
 
-    public async Task UpdateProductAsync(Products products)
+    public async Task UpdateProductAsync(Product product)
     {
-        _context.Products.Update(products);
+        _context.Products.Update(product);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteProductAsync(Products products)
+    public async Task DeleteProductAsync(Product product)
     { 
-        _context.Products.Remove(products);
+        _context.Products.Remove(product);
         await _context.SaveChangesAsync();
     }
 }

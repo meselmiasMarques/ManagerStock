@@ -13,7 +13,7 @@ public class ProductService
    public ProductService(IProductRepository repository)
       => _repository = repository;
    
-   public async Task<Products> CreateAsync(EditorProductViewModel model)
+   public async Task<Product> CreateAsync(EditorProductViewModel model)
    {
      if (model.Price < 0) 
          throw new ArgumentException("Preço inválido");
@@ -21,7 +21,7 @@ public class ProductService
      if (model.StockAmout < 0) 
         throw new ArgumentException("Estoque inválido");
       
-     var product = new Products(
+     var product = new Product(
         model.Name,
         model.Description,
         model.Price,
@@ -32,7 +32,7 @@ public class ProductService
      return product;
    }
 
-   public async Task<List<Products>> GetAllAsync(
+   public async Task<List<Product>> GetAllAsync(
       decimal? minPrice,
       decimal? maxPrice,
       string? search 
@@ -51,26 +51,26 @@ public class ProductService
       return products;
    }
    
-   public async Task<ResultViewModel<List<Products>>> GetAllProductWhenStockAsync()
+   public async Task<ResultViewModel<List<Product>>> GetAllProductWhenStockAsync()
    {
       var products = await _repository.GetAllProductsAsync();
      products = products.Where(p => p.StockAmout == 0).ToList();
      
-      return new ResultViewModel<List<Products>>(products);
+      return new ResultViewModel<List<Product>>(products);
    }
    
-   public async Task<ResultViewModel<Products>> GetByIdAsync(int id)
+   public async Task<ResultViewModel<Product>> GetByIdAsync(int id)
    {
       var product = await _repository.GetProductByIdAsync(id);
       if (product == null)
       {
-         return new ResultViewModel<Products>("Produto não foi encontrado");
+         return new ResultViewModel<Product>("Produto não foi encontrado");
       }
 
-      return new ResultViewModel<Products>(product);
+      return new ResultViewModel<Product>(product);
    }
    
-   public async Task<ResultViewModel<Products>> UpdateAsync(int id,EditorProductViewModel model)
+   public async Task<ResultViewModel<Product>> UpdateAsync(int id,EditorProductViewModel model)
    {
       if (model.Price < 0) 
          throw new ArgumentException("Preço inválido");
@@ -80,7 +80,7 @@ public class ProductService
 
       var product = await _repository.GetProductByIdAsync(id);
       if (product == null)
-         return new ResultViewModel<Products>("Produto não foi encontrado");
+         return new ResultViewModel<Product>("Produto não foi encontrado");
       
       product.Name = model.Name;
       product.Description = model.Description;
@@ -88,32 +88,32 @@ public class ProductService
       product.StockAmout = model.StockAmout;
       
       await _repository.UpdateProductAsync(product);
-      return new ResultViewModel<Products>(product);
+      return new ResultViewModel<Product>(product);
    }
    
-   public async Task<ResultViewModel<Products>> StockDown(int id, EditorStockViewModel model)
+   public async Task<ResultViewModel<Product>> StockDown(int id, EditorStockViewModel model)
    {
       var product = await _repository.GetProductByIdAsync(id);
       
       if (product == null)
-         return new ResultViewModel<Products>("Produto não foi encontrado");
+         return new ResultViewModel<Product>("Produto não foi encontrado");
       
       if (product.StockAmout < model.StockAmout)
-         return new ResultViewModel<Products>("Não foi possível Atualizar o estoque do produto");
+         return new ResultViewModel<Product>("Não foi possível Atualizar o estoque do produto");
       
       product.StockAmout = (product.StockAmout - model.StockAmout);
       
       await _repository.UpdateProductAsync(product);
-      return new ResultViewModel<Products>(product);
+      return new ResultViewModel<Product>(product);
    }
    
-   public async Task<ResultViewModel<Products>> RemoveAsync(int id)
+   public async Task<ResultViewModel<Product>> RemoveAsync(int id)
    {
       
       var product = await _repository.GetProductByIdAsync(id);
       if (product == null)
-         return new ResultViewModel<Products>("Produto não foi encontrado");
+         return new ResultViewModel<Product>("Produto não foi encontrado");
       await _repository.DeleteProductAsync(product);
-      return new ResultViewModel<Products>(product);
+      return new ResultViewModel<Product>(product);
    }
 }
